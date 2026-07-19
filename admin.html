@@ -214,15 +214,90 @@ table.admin-table{
   </div>
 
 <script>
-const STORAGE_KEY = "hs-rsvp-2026-responses";
+// ============================================================
+// SETUP REQUIRED: paste your Google Sheet's ID below.
+//
+// This is DIFFERENT from the Apps Script URL used in app.js — it's
+// the ID of the actual spreadsheet. Find it in the Sheet's URL:
+//   https://docs.google.com/spreadsheets/d/PASTE_THIS_PART/edit
+//
+// This page also requires the Sheet's sharing setting to be
+// "Anyone with the link → Viewer". That does NOT make it editable
+// by strangers — view-only means visitors can only read it, and
+// only if they have this exact admin.html link, which you should
+// keep private. Only you have the "Edit" link to the Sheet itself.
+// ============================================================
+
+const SHEET_ID = "1tPdgjuAZbixTTgFsp3CiWqzEUTPYOtD6F7sX-vlhR2M";
+
+function isSheetConfigured(){
+  return SHEET_ID && SHEET_ID !== "YOUR_GOOGLE_SHEET_ID_HERE";
+}
+
 let allData = [];
 
 async function fetchData(){
+  if(!isSheetConfigured()){
+    return { data: [], configError: true };
+  }
+
+  const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=RSVPs`;
+
   try{
-    const res = await window.storage.get(STORAGE_KEY, true);
-    if(res && res.value) return JSON.parse(res.value);
-  }catch(e){ return []; }
-  return [];
+    const res = await fetch(csvUrl);
+    if(!res.ok) throw new Error('Sheet fetch failed: ' + res.status);
+    const csvText = await res.text();
+    return { data: parseCSV(csvText), configError: false };
+  }catch(e){
+    console.error('Could not load the Sheet:', e);
+    return { data: [], fetchError: true };
+  }
+}
+
+// Minimal CSV parser that handles quoted fields containing commas,
+// which guest messages will often have.
+function parseCSV(text){
+  const rows = [];
+  let row = [];
+  let field = '';
+  let inQuotes = false;
+
+  for(let i = 0; i < text.length; i++){
+    const char = text[i];
+    const next = text[i+1];
+
+    if(inQuotes){
+      if(char === '"' && next === '"'){ field += '"'; i++; }
+      else if(char === '"'){ inQuotes = false; }
+      else{ field += char; }
+    }else{
+      if(char === '"'){ inQuotes = true; }
+      else if(char === ','){ row.push(field); field = ''; }
+      else if(char === '\n' || char === '\r'){
+        if(char === '\r' && next === '\n') i++;
+        row.push(field); field = '';
+        if(row.some(f => f.trim() !== '')) rows.push(row);
+        row = [];
+      }else{
+        field += char;
+      }
+    }
+  }
+  if(field !== '' || row.length > 0){ row.push(field); rows.push(row); }
+
+  if(rows.length === 0) return [];
+
+  // First row is the header: Submitted At, Name, Attending, Guests, Phone, Message
+  const dataRows = rows.slice(1);
+
+  return dataRows.map(r => ({
+    submittedAt: r[0] || '',
+    name: r[1] || '',
+    attending: (r[2] || '').toLowerCase() === 'yes' ? 'yes' : 'no',
+    guestCount: parseInt(r[3], 10) || 0,
+    phone: r[4] || '',
+    message: r[5] || '',
+  }));
 }
 
 function renderStats(data){
@@ -246,8 +321,32 @@ function renderStats(data){
   `;
 }
 
-function renderTable(data){
+function renderTable(data, state){
   const content = document.getElementById('admin-content');
+
+  if(state && state.configError){
+    content.innerHTML = `
+      <div class="admin-table-card">
+        <div class="admin-empty">
+          <div class="admin-empty-icon">⚙</div>
+          This page isn't connected to your Google Sheet yet.<br>
+          <div class="admin-note">Open admin.html, find SHEET_ID near the top of the script, and paste in your Sheet's ID. See the comment right above it for exactly where to find it.</div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  if(state && state.fetchError){
+    content.innerHTML = `
+      <div class="admin-table-card">
+        <div class="admin-empty">
+          <div class="admin-empty-icon">⚠</div>
+          Couldn't load the Sheet right now.<br>
+          <div class="admin-note">Check that the Sheet's sharing is set to "Anyone with the link → Viewer", and that the sheet tab is named exactly "RSVPs". Then hit Refresh.</div>
+        </div>
+      </div>`;
+    return;
+  }
 
   if(data.length === 0){
     content.innerHTML = `
@@ -255,7 +354,7 @@ function renderTable(data){
         <div class="admin-empty">
           <div class="admin-empty-icon">✉</div>
           No responses yet — once guests start responding, they'll appear here.<br>
-          <div class="admin-note">Tip: bookmark this page. It updates automatically as guests respond.</div>
+          <div class="admin-note">Hit Refresh any time to check for new ones.</div>
         </div>
       </div>`;
     return;
@@ -285,8 +384,11 @@ function renderTable(data){
 }
 
 function rowHTML(d){
-  const date = new Date(d.submittedAt);
-  const dateStr = date.toLocaleDateString('en-GB', {day:'numeric', month:'short'}) + ', ' + date.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+  let dateStr = d.submittedAt || '—';
+  const parsed = new Date(d.submittedAt);
+  if(!isNaN(parsed.getTime())){
+    dateStr = parsed.toLocaleDateString('en-GB', {day:'numeric', month:'short'}) + ', ' + parsed.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+  }
   return `
     <tr data-name="${(d.name||'').toLowerCase()}">
       <td>${escapeHTML(d.name || '—')}</td>
@@ -332,9 +434,10 @@ function exportCSV(data){
 
 async function load(){
   document.getElementById('admin-content').innerHTML = `<div class="admin-table-card"><div class="admin-empty">Loading responses…</div></div>`;
-  allData = await fetchData();
+  const result = await fetchData();
+  allData = result.data;
   renderStats(allData);
-  renderTable(allData);
+  renderTable(allData, result);
 }
 
 document.getElementById('refresh-btn').addEventListener('click', load);
