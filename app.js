@@ -8,6 +8,14 @@ const EVENT = {
   bride: "Hasara",
   groom: "Shehara",
   dateISO: "2026-08-20T09:30:00+05:30", // Sri Lanka time
+  dateLabel: "20th August 2026",
+  dayLabel: "Thursday",
+  timeLabel: "9.30 a.m.",
+  registrationTime: "10.05 a.m.",
+  rsvpDeadline: "10th August 2026",
+  venueName: "Rock Fort Beach Resort",
+  hallName: "Blue Ocean Ballroom",
+  address: "Dalawella, Unawatuna, Galle",
   mapsQuery: "Rock Fort Beach Resort, Dalawella, Unawatuna, Galle, Sri Lanka",
 };
 
@@ -286,7 +294,7 @@ function wireGate() {
     setTimeout(() => {
       document.documentElement.classList.remove("gate-active");
       gate.remove();
-    }, 900);
+    }, 1220);
   }
 
   gate.addEventListener("click", openGate);
@@ -361,28 +369,16 @@ function renderMain() {
   const root = document.getElementById("root");
 
   root.innerHTML = `
-    <!-- ============ GATE (tap to open — first impression) ============ -->
-    <div class="gate" id="gate" role="button" tabindex="0" aria-label="Tap to open your invitation">
-      <div class="sparkle-field" id="sparkle-field"></div>
-      <div class="wrap">
-        <div class="gate-frame">
-          <div class="corner tl">${cornerOrnamentSVG}</div>
-          <div class="corner tr">${cornerOrnamentSVG}</div>
-
-          <div class="monogram-wrap">
-            <div class="monogram-glow"></div>
-            ${monogramSVG}
-          </div>
-
-          <div class="gate-cta">
-            <div class="gate-tap-ring">${iconTap}</div>
-            <div class="gate-cta-text">Tap to Open</div>
-          </div>
-
-          <div class="corner bl">${cornerOrnamentSVG}</div>
-          <div class="corner br">${cornerOrnamentSVG}</div>
-        </div>
-      </div>
+    <!-- ============ REFINED OPENING COVER ============ -->
+    <div class="gate" id="gate" role="button" tabindex="0" aria-label="Open the invitation">
+      <div class="gate-panel left" aria-hidden="true"></div><div class="gate-panel right" aria-hidden="true"></div>
+      <div class="gate-opening-line" aria-hidden="true"></div>
+      <div class="wrap"><div class="gate-frame">
+        <div class="gate-kicker">Together with their families</div>
+        <div class="gate-names">Hasara <span>&amp;</span> Shehara</div>
+        <div class="gate-date">20 · 08 · 2026</div><div class="gate-rule" aria-hidden="true"></div>
+        <div class="gate-open-label">Open Invitation</div><div class="gate-hint">Click or press Enter</div>
+      </div></div>
     </div>
 
     <!-- ============ FLYER (revealed once the gate opens) ============ -->
@@ -392,35 +388,6 @@ function renderMain() {
         src="invitation-flyer.jpg"
         alt="Hasara &amp; Shehara engagement invitation — Thursday 20th August 2026 at 9.30 a.m., Rock Fort Beach Resort, Blue Ocean Ballroom, Dalawella, Unawatuna, Galle">
       <div class="post-flyer-cue">${scrollCueSVG}</div>
-    </section>
-
-    <!-- ============ FAMILIES ============ -->
-    <section>
-      <div class="wrap">
-        <div class="fade-up">
-          <p class="together-line serif">With hearts full of joy, we invite you</p>
-        </div>
-
-        <div class="families-grid fade-up">
-          <div class="family-card">
-            <div class="family-side-label">Bride's Parents</div>
-            <div class="family-parents serif">${EVENT.brideParents}</div>
-            <div class="family-child">daughter, ${EVENT.bride}</div>
-          </div>
-
-          <div class="family-divider-row">
-            <div class="divider" style="max-width:120px;"><span class="line"></span></div>
-            <span class="amp-mark">&amp;</span>
-            <div class="divider" style="max-width:120px;"><span class="line"></span></div>
-          </div>
-
-          <div class="family-card">
-            <div class="family-side-label">Groom's Parents</div>
-            <div class="family-parents serif">${EVENT.groomParents}</div>
-            <div class="family-child">son, ${EVENT.groom}</div>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- ============ COUNTDOWN ============ -->
@@ -433,8 +400,6 @@ function renderMain() {
         <div class="countdown-row fade-up" id="countdown-row"></div>
       </div>
     </section>
-
-    
 
     <!-- ============ VENUE MAP ============ -->
     <section>
@@ -505,11 +470,8 @@ function renderMain() {
     </footer>
   `;
 
-  document.getElementById("add-calendar-btn").addEventListener("click", downloadICS);
   document.getElementById("share-btn").addEventListener("click", shareInvite);
 
-  initSparkleField();
-  initMonogramDraw();
   initCountdown();
   wireRSVPForm();
   wireGate(); // starts scroll-reveal once the gate opens (see wireGate)
