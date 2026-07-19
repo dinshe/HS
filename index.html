@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="gate-active">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -10,6 +10,10 @@
 <meta property="og:title" content="Hasara & Shehara — Together with their families">
 <meta property="og:description" content="20th August 2026 · Rock Fort Beach Resort, Unawatuna, Galle">
 <meta property="og:type" content="website">
+<!-- Replace with the full https:// address of invitation-flyer.jpg once this is hosted, so the WhatsApp preview shows the flyer itself -->
+<meta property="og:image" content="https://YOUR-DOMAIN-HERE/invitation-flyer.jpg">
+<meta property="og:image:width" content="1400">
+<meta property="og:image:height" content="1875">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -106,19 +110,40 @@ section:not(:last-of-type)::after{
   opacity:0.5;
 }
 
-/* ---------- Hero ---------- */
-.hero{
-  padding:56px 0 72px;
-  text-align:center;
+/* ---------- Gate (tap-to-open first impression) ---------- */
+html.gate-active{overflow:hidden;}
+html.gate-active body{overflow:hidden;}
+
+.gate{
+  position:fixed;
+  inset:0;
+  z-index:1000;
   display:flex;
-  flex-direction:column;
   align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -5%, rgba(201,162,74,0.16), transparent 60%),
+    radial-gradient(ellipse 70% 40% at 85% 15%, rgba(201,162,74,0.08), transparent),
+    linear-gradient(180deg, var(--off-white) 0%, var(--beige) 100%);
+  transition:opacity 0.85s ease, transform 0.85s cubic-bezier(0.65,0,0.35,1), filter 0.85s ease;
+}
+.gate:focus-visible{
+  outline:2px solid var(--gold-deep);
+  outline-offset:-6px;
+}
+.gate.opening{
+  opacity:0;
+  transform:scale(1.06);
+  filter:blur(8px);
+  pointer-events:none;
 }
 
-.hero-frame{
+.gate-frame{
   position:relative;
   width:100%;
-  padding-top:24px;
+  padding:24px 0;
+  text-align:center;
 }
 
 .corner{
@@ -214,16 +239,6 @@ section:not(:last-of-type)::after{
 .monogram-letters path.p1.draw-ready{animation-delay:0.3s;}
 .monogram-letters path.p2.draw-ready{animation-delay:1.0s;}
 
-.monogram-amp{
-  font-family:'Cormorant Garamond', serif;
-  font-style:italic;
-  font-size:15px;
-  fill:var(--silver);
-  opacity:0;
-  animation:fade-in-simple 0.8s ease forwards;
-  animation-delay:2.2s;
-}
-
 @keyframes draw-monogram{
   from{stroke-dashoffset:var(--path-len);}
   to{stroke-dashoffset:0;}
@@ -232,109 +247,86 @@ section:not(:last-of-type)::after{
   to{opacity:0.85;}
 }
 
-.pre-eyebrow{
-  font-size:11px;
+/* ---------- Gate tap prompt ---------- */
+.gate-cta{
+  margin-top:8px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:16px;
+}
+.gate-tap-ring{
+  position:relative;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  border:1px solid var(--gold);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--gold-deep);
+  opacity:0;
+  animation:fade-in-simple 1s ease forwards;
+  animation-delay:2.6s;
+}
+.gate-tap-ring svg{width:22px; height:22px;}
+.gate-tap-ring::before{
+  content:'';
+  position:absolute;
+  inset:-9px;
+  border-radius:50%;
+  border:1px solid var(--gold-pale);
+  animation:tap-pulse 2.4s ease-out infinite;
+  animation-delay:3.4s;
+}
+@keyframes tap-pulse{
+  0%{transform:scale(0.82); opacity:0.9;}
+  100%{transform:scale(1.4); opacity:0;}
+}
+.gate-cta-text{
+  font-size:11.5px;
   letter-spacing:0.3em;
   text-transform:uppercase;
   color:var(--ink-soft);
-  font-weight:400;
-  opacity:0;
-  animation:fade-in-simple 1s ease forwards;
-  animation-delay:0.1s;
-  margin-bottom:6px;
-}
-.pre-eyebrow{opacity:0; animation-name:pre-eyebrow-in;}
-@keyframes pre-eyebrow-in{ to{opacity:0.75;} }
-
-.hero-names{
-  font-family:'Cormorant Garamond', serif;
-  font-weight:500;
-  font-size:clamp(46px, 13vw, 68px);
-  line-height:1.05;
-  letter-spacing:0.01em;
-  color:var(--ink);
-  opacity:0;
-  position:relative;
-  animation:names-in 1s cubic-bezier(0.16,1,0.3,1) forwards;
-  animation-delay:2.5s;
-}
-@keyframes names-in{
-  from{opacity:0; transform:translateY(14px);}
-  to{opacity:1; transform:translateY(0);}
-}
-
-.hero-names::after{
-  content:'';
-  position:absolute;
-  top:0;
-  left:-100%;
-  width:60%;
-  height:100%;
-  background:linear-gradient(100deg, transparent, rgba(255,255,255,0.55) 45%, transparent 65%);
-  animation:shimmer-sweep 1.4s ease-in-out forwards;
-  animation-delay:3.6s;
-  pointer-events:none;
-}
-@keyframes shimmer-sweep{
-  to{left:130%;}
-}
-
-.hero-names .amp-word{
-  display:block;
-  font-style:italic;
-  font-weight:400;
-  font-size:0.5em;
-  color:var(--gold-deep);
-  margin:2px 0;
-}
-
-.hero-sub{
-  margin-top:22px;
-  font-size:14px;
-  letter-spacing:0.04em;
-  color:var(--ink-soft);
-  line-height:1.7;
-  max-width:340px;
-  opacity:0;
-  animation:fade-in-simple 1s ease forwards;
-  animation-delay:3s;
-}
-
-.hero-date-pill{
-  margin-top:32px;
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  padding:12px 26px;
-  border:1px solid var(--gold);
-  border-radius:999px;
-  background:rgba(255,255,255,0.4);
-  backdrop-filter:blur(6px);
-  font-size:12.5px;
-  letter-spacing:0.14em;
-  text-transform:uppercase;
-  color:var(--gold-deep);
   font-weight:500;
   opacity:0;
-  animation:fade-in-simple 1s ease forwards, pill-in 1s cubic-bezier(0.16,1,0.3,1) forwards;
-  animation-delay:3.2s;
-}
-@keyframes pill-in{
-  from{transform:translateY(10px);}
-  to{transform:translateY(0);}
+  animation:fade-in-simple 1s ease forwards;
+  animation-delay:2.8s;
 }
 
-.scroll-cue{
-  margin-top:56px;
-  opacity:0;
-  animation:cue-in 1s ease forwards, cue-bob 2.4s ease-in-out infinite;
-  animation-delay:3.6s, 4.6s;
-  color:var(--silver);
-}
-@keyframes cue-in{ to{opacity:0.7;} }
 @keyframes cue-bob{
   0%,100%{transform:translateY(0);}
   50%{transform:translateY(6px);}
+}
+
+/* ---------- Flyer (revealed once the gate opens) ---------- */
+.flyer-section{
+  padding:0 0 32px;
+  text-align:center;
+}
+.flyer-image{
+  display:block;
+  width:100%;
+  max-width:900px;
+  margin:0 auto;
+  height:auto;
+  opacity:0;
+  transform:scale(1.04);
+  transition:opacity 1s ease 0.1s, transform 1.1s cubic-bezier(0.16,1,0.3,1) 0.1s;
+}
+body.invitation-open .flyer-image{
+  opacity:1;
+  transform:scale(1);
+}
+.post-flyer-cue{
+  margin-top:26px;
+  opacity:0;
+  color:var(--silver);
+  transition:opacity 1s ease 1s;
+}
+body.invitation-open .post-flyer-cue{
+  opacity:0.7;
+  animation:cue-bob 2.4s ease-in-out infinite;
 }
 
 /* ---------- Countdown ---------- */
@@ -557,38 +549,6 @@ section:not(:last-of-type)::after{
 }
 .btn-gold:active, .btn-outline:active{
   transform:translateY(0px) scale(0.98);
-}
-
-/* ---------- Schedule ---------- */
-.schedule-list{
-  display:flex;
-  flex-direction:column;
-}
-.schedule-item{
-  display:grid;
-  grid-template-columns:76px 1fr;
-  gap:18px;
-  padding:18px 0;
-  border-bottom:1px dashed var(--gold-pale);
-}
-.schedule-item:last-child{border-bottom:none;}
-.schedule-time{
-  font-family:'Cormorant Garamond', serif;
-  font-size:17px;
-  color:var(--gold-deep);
-  font-weight:600;
-  text-align:right;
-  padding-top:2px;
-}
-.schedule-text .schedule-title{
-  font-size:15px;
-  color:var(--ink);
-  font-weight:500;
-}
-.schedule-text .schedule-desc{
-  font-size:12.5px;
-  color:var(--ink-soft);
-  margin-top:3px;
 }
 
 /* ---------- Dress code ---------- */
