@@ -93,7 +93,7 @@ const monogramSVG = `
 // you just won't see a combined live list yet.
 // ============================================================
 
-const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1iivnjUQp5x4yJdaGhg4J0QjBlULNAkvfiGqQ3Q0duwhDJvyAgpnvhcLbarXIeM3H1w/exec";
 
 function isAppsScriptConfigured() {
   return APPS_SCRIPT_URL && APPS_SCRIPT_URL !== "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
