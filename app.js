@@ -437,39 +437,7 @@ function renderMain() {
     <!-- ============ EVENT DETAILS ============ -->
     <section>
       <div class="wrap">
-        <div class="section-head fade-up">
-          <div class="eyebrow">Save the Date</div>
-          <div class="section-title serif">Event Details</div>
-        </div>
-
-        <div class="details-stack fade-up">
-          <div class="detail-card">
-            <div class="detail-icon">${iconCalendar}</div>
-            <div class="detail-body">
-              <div class="detail-label">Date</div>
-              <div class="detail-value serif">${EVENT.dateLabel}</div>
-              <div class="detail-sub">${EVENT.dayLabel}</div>
-            </div>
-          </div>
-
-          <div class="detail-card">
-            <div class="detail-icon">${iconClock}</div>
-            <div class="detail-body">
-              <div class="detail-label">Time</div>
-              <div class="detail-value serif">${EVENT.timeLabel} onwards</div>
-              <div class="detail-sub">Registration opens at ${EVENT.registrationTime}</div>
-            </div>
-          </div>
-
-          <div class="detail-card">
-            <div class="detail-icon">${iconPin}</div>
-            <div class="detail-body">
-              <div class="detail-label">Venue</div>
-              <div class="detail-value serif">${EVENT.hallName}</div>
-              <div class="detail-sub">${EVENT.venueName}, ${EVENT.address}</div>
-            </div>
-          </div>
-        </div>
+        
 
         <div style="text-align:center; margin-top:26px;" class="fade-up">
           <button class="btn-outline" id="add-calendar-btn" type="button">${iconCalendar} Add to Calendar</button>
