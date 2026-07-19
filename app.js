@@ -51,6 +51,7 @@ const iconCheck = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 const iconWhatsapp = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5C10 9 9.4 7.6 9.1 7c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.4s1 2.8 1.1 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 2-1.4.2-.7.2-1.2.1-1.4-.1-.1-.2-.2-.5-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.6 1.4 5.1L2 22l5-1.3c1.4.8 3.1 1.2 4.9 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>`;
 const iconShare = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.8"/><circle cx="6" cy="12" r="2.8"/><circle cx="18" cy="19" r="2.8"/><path d="M8.4 10.6l7.2-4.2M8.4 13.4l7.2 4.2"/></svg>`;
 const iconMap = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20l-6-2V4l6 2 6-2 6 2v14l-6-2-6 2z"/><path d="M9 6v14M15 4v14"/></svg>`;
+const iconTap = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12.5V6a2 2 0 1 1 4 0v5M13 11V5a2 2 0 1 1 4 0v7M17 12V9a2 2 0 1 1 4 0v6a7 7 0 0 1-7 7h-1a7 7 0 0 1-5.7-3l-3-4.6a1.8 1.8 0 0 1 2.8-2.2L9 14"/></svg>`;
 
 // Monogram: legible serif H & S, built from precise letterform geometry, drawn on load
 const monogramSVG = `
@@ -77,7 +78,6 @@ const monogramSVG = `
       C 98 101, 88 97, 84 90
     "/>
   </g>
-  <text class="monogram-amp" x="84" y="132" text-anchor="middle">Hasara &amp; Shehara</text>
 </svg>`;
 
 // ============================================================
@@ -93,7 +93,7 @@ const monogramSVG = `
 // you just won't see a combined live list yet.
 // ============================================================
 
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1iivnjUQp5x4yJdaGhg4J0QjBlULNAkvfiGqQ3Q0duwhDJvyAgpnvhcLbarXIeM3H1w/exec";
+const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
 
 function isAppsScriptConfigured() {
   return APPS_SCRIPT_URL && APPS_SCRIPT_URL !== "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
@@ -272,6 +272,41 @@ function initCountdown() {
 }
 
 // ============================================================
+// Gate (tap-to-open first impression)
+// ============================================================
+
+function wireGate() {
+  const gate = document.getElementById("gate");
+  if (!gate) return;
+
+  let opened = false;
+
+  function openGate() {
+    if (opened) return;
+    opened = true;
+
+    gate.classList.add("opening");
+    document.body.classList.add("invitation-open");
+    initScrollReveal();
+
+    // Give the closing transition time to finish before removing the gate
+    // and unlocking scroll, so nothing jumps mid-animation.
+    setTimeout(() => {
+      document.documentElement.classList.remove("gate-active");
+      gate.remove();
+    }, 900);
+  }
+
+  gate.addEventListener("click", openGate);
+  gate.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      openGate();
+    }
+  });
+}
+
+// ============================================================
 // Calendar file (.ics) generator — "Add to Calendar"
 // ============================================================
 
@@ -334,42 +369,37 @@ function renderMain() {
   const root = document.getElementById("root");
 
   root.innerHTML = `
-    <!-- ============ HERO ============ -->
-    <section class="hero">
+    <!-- ============ GATE (tap to open — first impression) ============ -->
+    <div class="gate" id="gate" role="button" tabindex="0" aria-label="Tap to open your invitation">
       <div class="sparkle-field" id="sparkle-field"></div>
       <div class="wrap">
-        <div class="hero-frame">
+        <div class="gate-frame">
           <div class="corner tl">${cornerOrnamentSVG}</div>
           <div class="corner tr">${cornerOrnamentSVG}</div>
-
-          <div class="pre-eyebrow">Together with their families</div>
 
           <div class="monogram-wrap">
             <div class="monogram-glow"></div>
             ${monogramSVG}
           </div>
 
-          <h1 class="hero-names serif">
-            Hasara
-            <span class="amp-word">&amp; Shehara</span>
-          </h1>
-
-          <p class="hero-sub">
-            We are getting engaged, and we would be honoured<br>to have you celebrate this beautiful beginning with us.
-          </p>
-
-          <div class="hero-date-pill">
-            <span>${EVENT.dateLabel}</span>
-            <span style="opacity:0.5;">·</span>
-            <span>${EVENT.venueName.split(" ")[0]} ${EVENT.venueName.split(" ")[1] || ""}</span>
+          <div class="gate-cta">
+            <div class="gate-tap-ring">${iconTap}</div>
+            <div class="gate-cta-text">Tap to Open</div>
           </div>
-
-          <div class="scroll-cue">${scrollCueSVG}</div>
 
           <div class="corner bl">${cornerOrnamentSVG}</div>
           <div class="corner br">${cornerOrnamentSVG}</div>
         </div>
       </div>
+    </div>
+
+    <!-- ============ FLYER (revealed once the gate opens) ============ -->
+    <section class="flyer-section" id="flyer-section">
+      <img
+        class="flyer-image"
+        src="invitation-flyer.jpg"
+        alt="Hasara &amp; Shehara engagement invitation — Thursday 20th August 2026 at 9.30 a.m., Rock Fort Beach Resort, Blue Ocean Ballroom, Dalawella, Unawatuna, Galle">
+      <div class="post-flyer-cue">${scrollCueSVG}</div>
     </section>
 
     <!-- ============ FAMILIES ============ -->
@@ -412,7 +442,7 @@ function renderMain() {
       </div>
     </section>
 
-    <!-- ============ DETAILS + SCHEDULE (merged) ============ -->
+    <!-- ============ EVENT DETAILS ============ -->
     <section>
       <div class="wrap">
         <div class="section-head fade-up">
@@ -451,37 +481,6 @@ function renderMain() {
 
         <div style="text-align:center; margin-top:26px;" class="fade-up">
           <button class="btn-outline" id="add-calendar-btn" type="button">${iconCalendar} Add to Calendar</button>
-        </div>
-
-        <div class="schedule-list fade-up" style="margin-top:44px;">
-          <div class="schedule-item">
-            <div class="schedule-time serif">9.30 am</div>
-            <div class="schedule-text">
-              <div class="schedule-title">Guest Arrival</div>
-              <div class="schedule-desc">Welcome drinks at the Blue Ocean Ballroom foyer</div>
-            </div>
-          </div>
-          <div class="schedule-item">
-            <div class="schedule-time serif">10.05 am</div>
-            <div class="schedule-text">
-              <div class="schedule-title">Registration</div>
-              <div class="schedule-desc">Please sign the guestbook as you're seated</div>
-            </div>
-          </div>
-          <div class="schedule-item">
-            <div class="schedule-time serif">10.30 am</div>
-            <div class="schedule-text">
-              <div class="schedule-title">Engagement Ceremony</div>
-              <div class="schedule-desc">Ring exchange &amp; blessings</div>
-            </div>
-          </div>
-          <div class="schedule-item">
-            <div class="schedule-time serif">12.00 pm</div>
-            <div class="schedule-text">
-              <div class="schedule-title">Celebration Lunch</div>
-              <div class="schedule-desc">Dining &amp; festivities in the Blue Ocean Ballroom</div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -560,9 +559,9 @@ function renderMain() {
 
   initSparkleField();
   initMonogramDraw();
-  initScrollReveal();
   initCountdown();
   wireRSVPForm();
+  wireGate(); // starts scroll-reveal once the gate opens (see wireGate)
 }
 
 // ============================================================
