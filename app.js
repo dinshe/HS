@@ -8,14 +8,6 @@ const EVENT = {
   bride: "Hasara",
   groom: "Shehara",
   dateISO: "2026-08-20T09:30:00+05:30", // Sri Lanka time
-  dateLabel: "20th August 2026",
-  dayLabel: "Thursday",
-  timeLabel: "9.30 a.m.",
-  registrationTime: "10.05 a.m.",
-  rsvpDeadline: "10th August 2026",
-  venueName: "Rock Fort Beach Resort",
-  hallName: "Blue Ocean Ballroom",
-  address: "Dalawella, Unawatuna, Galle",
   mapsQuery: "Rock Fort Beach Resort, Dalawella, Unawatuna, Galle, Sri Lanka",
 };
 
