@@ -434,16 +434,7 @@ function renderMain() {
       </div>
     </section>
 
-    <!-- ============ EVENT DETAILS ============ -->
-    <section>
-      <div class="wrap">
-        
-
-        <div style="text-align:center; margin-top:26px;" class="fade-up">
-          <button class="btn-outline" id="add-calendar-btn" type="button">${iconCalendar} Add to Calendar</button>
-        </div>
-      </div>
-    </section>
+    
 
     <!-- ============ VENUE MAP ============ -->
     <section>
