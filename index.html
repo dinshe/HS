@@ -907,6 +907,47 @@ body{background:radial-gradient(circle at 9% 9%,rgba(183,122,52,.11),transparent
   width: 14px !important;
   height: 14px !important;
 }
+
+/* Smaller and faster Tap to Open text */
+.gate-cta-text,
+.gate-open-label {
+  font-size: 8px !important;
+  letter-spacing: 0.18em !important;
+  line-height: 1.2 !important;
+
+  opacity: 0;
+  animation: fast-open-text 0.35s ease-out forwards !important;
+  animation-delay: 0.25s !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: none !important;
+}
+
+/* Remove the right-side dash and underline */
+.gate-cta-text::before,
+.gate-cta-text::after,
+.gate-open-label::before,
+.gate-open-label::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Fast, professional entrance */
+@keyframes fast-open-text {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 0.85;
+    transform: translateY(0);
+  }
+}
+
 </style>
 </head>
 <body>
