@@ -425,7 +425,7 @@ function renderMain() {
             <div class="venue-btn-row">
               <a class="btn-gold" target="_blank" rel="noopener"
                  href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(EVENT.mapsQuery)}">
-                 ${iconMap} Get Directions
+                 ${iconMap} Directions
               </a>
             </div>
           </div>
@@ -467,8 +467,7 @@ function renderMain() {
     <footer class="footer">
       <div class="wrap">
         <div class="footer-monogram serif">H &amp; S</div>
-        <div class="footer-line">With love &amp; gratitude — 20th August 2026</div>
-        <div class="footer-line" style="margin-top:18px; opacity:0.6;">Rock Fort Beach Resort · Unawatuna · Galle</div>
+        <div class="footer-line">With love &amp; gratitude</div>
       </div>
     </footer>
   `;
