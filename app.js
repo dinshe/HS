@@ -394,7 +394,7 @@ function renderMain() {
     </section>
 
     <!-- ============ COUNTDOWN ============ -->
-    <section style="padding-top:64px; padding-bottom:64px;">
+    <section style="padding-top:30px; padding-bottom:64px;">
       <div class="wrap">
         <div class="section-head fade-up">
           <div class="eyebrow">Counting down to</div>
