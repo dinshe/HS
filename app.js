@@ -380,7 +380,7 @@ function renderMain() {
           <div class="gate-title">An Engagement<br>Ceremony</div>
           <div class="gate-date">20 · 08 · 2026</div>
           <div class="gate-rule" aria-hidden="true"></div>
-          <div class="gate-open-label">Tap to Open Invitation</div>
+          <div class="gate-cta-text" style="border:none; border-bottom:none; box-shadow:none; background:none;">Tap to Open Invitation</div>
         </div>
       </div>
     </div>
