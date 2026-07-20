@@ -377,7 +377,7 @@ function renderMain() {
       <div class="wrap">
         <div class="gate-frame">
           <div class="gate-kicker">You Are Cordially Invited To</div>
-          <div class="gate-title">Our Engagement<br>Ceremony</div>
+          <div class="gate-title">An Engagement<br>Ceremony</div>
           <div class="gate-date">20 · 08 · 2026</div>
           <div class="gate-rule" aria-hidden="true"></div>
           <div class="gate-open-label">Tap to Open Invitation</div>
