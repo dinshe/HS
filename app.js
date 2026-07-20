@@ -93,7 +93,7 @@ const monogramSVG = `
 // you just won't see a combined live list yet.
 // ============================================================
 
-const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+const APPS_SCRIPT_URL = window.INVITATION_CONFIG?.APPS_SCRIPT_URL || "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
 
 function isAppsScriptConfigured() {
   return APPS_SCRIPT_URL && APPS_SCRIPT_URL !== "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
@@ -370,15 +370,20 @@ function renderMain() {
 
   root.innerHTML = `
     <!-- ============ REFINED OPENING COVER ============ -->
-    <div class="gate" id="gate" role="button" tabindex="0" aria-label="Open the invitation">
-      <div class="gate-panel left" aria-hidden="true"></div><div class="gate-panel right" aria-hidden="true"></div>
+    <div class="gate" id="gate" role="button" tabindex="0" aria-label="Open the engagement ceremony invitation">
+      <div class="gate-panel left" aria-hidden="true"></div>
+      <div class="gate-panel right" aria-hidden="true"></div>
       <div class="gate-opening-line" aria-hidden="true"></div>
-      <div class="wrap"><div class="gate-frame">
-        <div class="gate-kicker">Together with their families</div>
-        <div class="gate-names">Hasara <span>&amp;</span> Shehara</div>
-        <div class="gate-date">20 · 08 · 2026</div><div class="gate-rule" aria-hidden="true"></div>
-        <div class="gate-open-label">Open Invitation</div><div class="gate-hint">Click or press Enter</div>
-      </div></div>
+      <div class="wrap">
+        <div class="gate-frame">
+          <div class="gate-kicker">You Are Cordially Invited To</div>
+          <div class="gate-title">An Engagement<br>Ceremony</div>
+          <div class="gate-date">20 · 08 · 2026</div>
+          <div class="gate-rule" aria-hidden="true"></div>
+          <div class="gate-open-label">Open Invitation</div>
+          <div class="gate-hint">Tap anywhere to enter</div>
+        </div>
+      </div>
     </div>
 
     <!-- ============ FLYER (revealed once the gate opens) ============ -->
