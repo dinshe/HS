@@ -458,7 +458,7 @@ function renderMain() {
           Know someone else who's invited? Share this invitation with them.
         </p>
         <div class="fade-up" style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-          <button class="btn-gold" id="share-btn" type="button">${iconShare} Share Invitation</button>
+          <button class="btn-gold share-btn-small" id="share-btn" type="button">${iconShare} Share</button>
         </div>
       </div>
     </section>
